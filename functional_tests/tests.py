@@ -70,14 +70,13 @@ class NewVisitorTest(LiveServerTestCase):
 		# Francis visits the home page. There is no sign of Edith's list
 		self.browser.get(self.live_server_url)
 		page_text = self.browser.find_element_by_tag_name('body').text
-		print(page_text)
 		self.assertNotIn('Buy peacock feathers', page_text)
 		self.assertNotIn('make a fly', page_text)
 
 		# Francis starts a new list by entering a new item. He
 		# is less interesting than Edith...
 		inputbox = self.browser.find_element_by_id('id_new_item')
-		inputbox.send_keys('Buy_milk')
+		inputbox.send_keys('Buy milk')
 		inputbox.send_keys(Keys.ENTER)
 
 		# Francis gets his own unique URL
@@ -96,6 +95,28 @@ class NewVisitorTest(LiveServerTestCase):
 		# She visists that URL - her to-do list is still there.
 
 		# Satisfied, she goes back to sleep
+
+	def test_layout_and_styling(self):
+		#Edith goes to the home page
+		self.browser.get(self.live_server_url)
+		self.browser.set_window_size(1024, 768)
+		
+		#She notices the input box is nicely centered
+		inputbox = self.browser.find_element_by_id('id_new_item')
+		self.assertAlmostEqual(
+			inputbox.location['x'] + inputbox.size['width'] / 2,
+			512,
+			delta=5
+		)
+		# She starts a new list and sees the input is nicely
+		# cntered there too
+		inputbox.send_keys('testing\n')
+		inputbox = self.browser.find_element_by_id('id_new_item')
+		self.assertAlmostEqual(
+			inputbox.location['x'] + inputbox.size['width'] / 2,
+			512,
+			delta=5
+			)
 
 #if __name__=='__main__':
 #	unittest.main(warnings='ignore')
